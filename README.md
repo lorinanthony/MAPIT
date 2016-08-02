@@ -18,9 +18,13 @@ In its current construction, we recommend against running MEPIT while using R St
 MEPIT requires the installation of the following R libraries:
 
 [doParallel](https://cran.r-project.org/web/packages/doParallel/index.html)
+
 [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
+
 [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
+
 [RcppParallel](https://cran.r-project.org/web/packages/RcppParallel/index.html)
+
 [CompQuadForm](https://cran.r-project.org/web/packages/CompQuadForm/index.html)
 
 The easiest method to install these packages is with the following command entered in an R shell. For example:
