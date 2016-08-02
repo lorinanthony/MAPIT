@@ -34,8 +34,8 @@ Alternatively, one can also [install R packages from the command line]
 For the simulation tutorial provided here, we generate genotypes for 3,000 samples typed at 10,000 unrelated variants. We show in our example R code how to implement MEPIT to perform a marginal epistasis association mapping test in order to find interacting causal variants of interest.
 
 ### Questions and Feedback
-For questions or concerns with the MEPIT R routines, please contact
-[Lorin Crawford](mailto:lac55@stat.duke.edu) and 
-[Xiang Zhou](mailto:xzhousph@umich.edu)
+For questions or concerns with the MEPIT functions, please contact
+[Lorin Crawford](mailto:lac55@stat.duke.edu) or 
+[Xiang Zhou](mailto:xzhousph@umich.edu).
 
 We appreciate any feedback you may have with our site and instructions.
