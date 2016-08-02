@@ -14,7 +14,7 @@ CRAN provides precompiled binary versions of R for Windows, MacOS, and select Li
 In its current construction, we recommend against running MEPIT while using R Studio.
 
 
-### R Packages Required for Analysis
+### R Packages Required for MEPIT
 MEPIT requires the installation of the following R libraries:
 
 [doParallel](https://cran.r-project.org/web/packages/doParallel/index.html)
