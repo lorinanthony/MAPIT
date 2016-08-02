@@ -42,4 +42,4 @@ For questions or concerns with the MEPIT functions, please contact
 [Lorin Crawford](mailto:lac55@stat.duke.edu) or 
 [Xiang Zhou](mailto:xzhousph@umich.edu).
 
-We appreciate any feedback you may have with our site and instructions.
+We appreciate any feedback you may have with our repository and instructions.
