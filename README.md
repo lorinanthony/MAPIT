@@ -34,8 +34,16 @@ The easiest method to install these packages is with the following example comma
 Alternatively, one can also [install R packages from the command line]
               (http://cran.r-project.org/doc/manuals/r-release/R-admin.html#Installing-packages).
 
+### C++ Functions Required for MEPIT
+The code in this repository assumes that basic C++ functions and applications are already set up on the running personal computer or cluster. If not, the MEPIT functions and necessary Rcpp packages will not work properly. A simple option is to use [gcc] (https://gcc.gnu.org/). macOS users may use this collection by referring to and installing the [Homebrew package manager](http://brew.sh/index.html):
+
+    brew install gcc
+
+Note that there are two available versions of MEPIT, one of which takes advantage of [OpenMP](http://openmp.org/wp/), an API for multi-platform shared-memory parallel programming in C/C++. This is to speed up the computational time of the modeling algorithm. Unfortunately, OS X does not currently support OpenMP under the default compiler. A work around to use OpenMP in R on OS X can be found [here](http://thecoatlessprofessor.com/programming/openmp-in-r-on-os-x/). If after following these directions, the compiler of the C++ functions with 'omp.h' still does not work, we offer a standard version of MEPIT without the option of parallelization.
+  
+
 ### Tutorial for Running MEPIT
-For the simulation tutorial provided here, we generate genotypes for 3,000 samples typed at 10,000 unrelated variants. We show in our example R code how to implement MEPIT to perform a marginal epistasis association mapping test in order to find interacting causal variants of interest.
+For the simulation tutorial provided here, we generate genotypes for 3,000 samples typed at 10,000 unrelated variants. We show in our example R code how to implement MEPIT (both the standard and parallelized versions) to perform a marginal epistasis association mapping test in order to find interacting causal variants of interest.
 
 ### Questions and Feedback
 For questions or concerns with the MEPIT functions, please contact
