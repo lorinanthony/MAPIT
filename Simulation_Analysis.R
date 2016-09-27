@@ -5,19 +5,16 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ### Load in the R libraries ###
-library(coda)
-library(MASS)
 library(doParallel)
 library(Rcpp)
 library(RcppArmadillo)
 library(RcppParallel)
-library(BGLR)
-library(monomvn)
-library(kernlab)
 library(CompQuadForm)
 
 ### Load in functions to make QQ-plot plots ###
 source("QQplot.R")
+
+#NOTE: This code assumes that the basic C++ functions are set up on the computer in use. If not, the MEPIT functions and Rcpp packages will not work properly. Mac users please refer to the homebrew applications and install the gcc commands listed in the README.md file before running the rest of the code [Warning: This step may take about an hour...].
 
 ######################################################################################
 ######################################################################################
@@ -72,7 +69,7 @@ beta=beta*sqrt(pve*rho/var(y_marginal))
 y_marginal=Xmarginal%*%beta
 
 ### Simulate epistatic effects ###
-alpha=rnorm(dim(Xepi)[2])
+alpha=rnorm(dim(W)[2])
 y_epi=W%*%alpha
 alpha=alpha*sqrt(pve*(1-rho)/var(y_epi))
 y_epi=W%*%alpha
@@ -99,11 +96,15 @@ SNPs = colnames(X)[c(s1,s2)]
 
 ### Running MEPIT using the Normal Method ###
 
-### Load in the C++ functions ###
+#REMEMBER: MEPIT takes the X matrix as pxn --- NOT nxp 
+
+### Load in the C++ MEPIT functions ###
 sourceCpp("MEPIT_Functions.cpp")
 
-Sys.setenv("PKG_CXXFLAGS"="-fopenmp")
+### Define how many cores the function should use in parallel ###
 cores = detectCores() 
+
+Sys.setenv("PKG_CXXFLAGS"="-fopenmp")
 ptm <- proc.time() #Start clock
 vc.mod = MEPIT_Normal(t(X),y,cores=cores)
 proc.time() - ptm #Stop clock
@@ -141,5 +142,39 @@ for(i in 1:length(vc.ts)){
 ### Combine the two sets of p-values
 vc.pvals = vc.pvals1; vc.pvals[ind] = vc.pvals2[ind]
 
+######################################################################################
+######################################################################################
+######################################################################################
+
 ### Plot observed the p-values on a QQ-plot ###
 ggd.qqplot(vc.pvals)
+
+### Look at the causal SNPs in group 1 and 2 ###
+vc.pvals[s1]
+vc.pvals[s2]
+
+######################################################################################
+######################################################################################
+######################################################################################
+
+### Running an Informed Exhaustive Search ###
+
+#NOTE: Now we may take only the significant SNPs according to their marginal epistatic effects and run a simple exhaustive search between them
+
+thresh = 0.05/length(vc.pvals) #Set a significance threshold
+v = vc.pvals[vc.pvals<=thresh] #Call only marginally significant SNPs
+pwise = c()
+for(k in 1:length(v)){
+  fit = c(); m = 1:length(v)
+  for(w in m[-k]){
+    pt = lm(y~X[,names(v)[k]]:X[,names(v)[w]])
+    fit[w] = coefficients(summary(pt))[8]
+    names(fit)[w] = paste(names(v)[k],names(v)[w],sep = "-")
+  }
+  pwise = c(pwise,fit)
+}
+
+### Look at the exhaustive search results ###
+vc.pwise = sort(pwise[!is.na(pwise)]) #Get rid of the NAs
+vc.pwise = vc.pwise[seq(1,length(vc.pwise),2)] #Only keep the unique pairs
+sort(vc.pwise)[1:150] #Sort the pairs in order of significance
