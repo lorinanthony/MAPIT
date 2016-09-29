@@ -99,7 +99,7 @@ SNPs = colnames(X)[c(s1,s2)]
 #REMEMBER: MEPIT takes the X matrix as pxn --- NOT nxp 
 
 ### Load in the C++ MEPIT functions ###
-sourceCpp("MEPIT_Functions.cpp")
+sourceCpp("MEPIT_OpenMP.cpp")
 
 ### Define how many cores the function should use in parallel ###
 cores = detectCores() 
