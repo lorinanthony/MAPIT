@@ -39,6 +39,8 @@ The code in this repository assumes that basic C++ functions and applications ar
 
     brew install gcc
 
+For extra tips on how to run C++ on macOS, please visit [here](http://seananderson.ca/2013/11/18/rcpp-mavericks.html). For tips on how to avoid errors dealing with "-lgfortran" or "-lquadmath", please visit [here](http://thecoatlessprofessor.com/programming/rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/).
+
 Note that there are two available versions of MEPIT, one of which takes advantage of [OpenMP](http://openmp.org/wp/), an API for multi-platform shared-memory parallel programming in C/C++. This is to speed up the computational time of the modeling algorithm. Unfortunately, OS X does not currently support OpenMP under the default compiler. A work around to use OpenMP in R on OS X can be found [here](http://thecoatlessprofessor.com/programming/openmp-in-r-on-os-x/). If after following these directions, the compiler of the C++ functions with 'omp.h' still does not work, we offer a standard version of MEPIT without the option of parallelization.
   
 
