@@ -1,3 +1,5 @@
+### Illustrating the MArginal ePIstasis Test (MAPIT) with Simulations ###
+
 ### Clear Console ###
 cat("\014")
 
@@ -14,7 +16,10 @@ library(CompQuadForm)
 ### Load in functions to make QQ-plot plots ###
 source("QQplot.R")
 
-#NOTE: This code assumes that the basic C++ functions are set up on the computer in use. If not, the MEPIT functions and Rcpp packages will not work properly. Mac users please refer to the homebrew applications and install the gcc commands listed in the README.md file before running the rest of the code [Warning: This step may take about an hour...].
+#NOTE: This code assumes that the basic C++ functions are set up on the computer in use. If not, the MAPIT functions and Rcpp packages will not work properly. Mac users please refer to the homebrew applications and install the gcc commands listed in the README.md file before running the rest of the code [Warning: This step may take about an hour...].
+
+### Load in the C++ MAPIT wrapper functions ###
+source("MAPIT.R"); sourceCpp("MAPIT.cpp")
 
 ######################################################################################
 ######################################################################################
@@ -94,58 +99,67 @@ SNPs = colnames(X)[c(s1,s2)]
 ######################################################################################
 ######################################################################################
 
-### Running MEPIT using the Normal Method ###
+### Running MAPIT using the Normal Method ###
 
-#REMEMBER: MEPIT takes the X matrix as pxn --- NOT nxp 
-
-### Load in the C++ MEPIT functions ###
-sourceCpp("MEPIT.cpp")
+#IMPORTANT: MAPIT takes the X matrix as pxn --- NOT nxp
 
 ptm <- proc.time() #Start clock
-vc.mod = MEPIT_Normal(t(X),y,cores=cores)
+mapit.normal = MAPIT(t(X),y)
 proc.time() - ptm #Stop clock
 
-vc.pvals1 = vc.mod$pvalues
-names(vc.pvals1) = colnames(X)
+normal.pvals = mapit.normal$pvalues
+names(normal.pvals) = colnames(X)
 
 ######################################################################################
 ######################################################################################
 ######################################################################################
 
-### Find the indices of the p-values that are below 0.05 ###
-ind = which(vc.pvals1<= 0.05)
-
-### Rerun MEPIT using the Davies Method to Recalibrate the p-values for SNPs <= 0.05 ###
+### Running MAPIT using only the Davies Method for every SNP ###
 ptm <- proc.time() #Start clock
-vc.mod = MEPIT_Davies(t(X),y,ind,cores=cores)
+vc.mod = MAPIT_Davies(t(X),y)
 proc.time() - ptm #Stop clock
 
-### Apply Davies Exact Method ###
+### Davies Exact Method ###
 vc.ts = vc.mod$Est
 names(vc.ts) = colnames(X)
 
-vc.pvals2 = c()
+davies.pvals = c()
 for(i in 1:length(vc.ts)){
   lambda = sort(vc.mod$Eigenvalues[,i],decreasing = T)
   
-  Davies_Method = davies(vc.mod$Est[i], lambda = lambda, acc=1e-8)
-  vc.pvals2[i] = 2*min(Davies_Method$Qq, 1-Davies_Method$Qq)
-  names(vc.pvals2)[i] = names(vc.ts[i])
+  Davies_Method = davies(vc.ts[i], lambda = lambda, acc=1e-8)
+  davies.pvals[i] = 2*min(Davies_Method$Qq, 1-Davies_Method$Qq)
+  names(davies.pvals)[i] = names(vc.ts[i])
 }
 
-### Combine the two sets of p-values
-vc.pvals = vc.pvals1; vc.pvals[ind] = vc.pvals2[ind]
+######################################################################################
+######################################################################################
+######################################################################################
+
+### Running MAPIT using the Hybrid Approach from the paper where we recalibrate the normal p-values that fall below 0.05 ###
+thresh = 0.05
+
+### Rerun MAPIT using the Davies Method to Recalibrate the p-values for SNPs <= 0.05 ###
+ptm <- proc.time() #Start clock
+mapit.hybrid = MAPIT(t(X),y,threshold=thresh)
+proc.time() - ptm #Stop clock
+
+hybrid.pvals = mapit.hybrid$pvalues
+names(hybrid.pvals) = colnames(X)
 
 ######################################################################################
 ######################################################################################
 ######################################################################################
 
 ### Plot observed the p-values on a QQ-plot ###
-ggd.qqplot(vc.pvals)
+ggd.qqplot(normal.pvals)
+ggd.qqplot(davies.pvals)
+ggd.qqplot(hybrid.pvals)
 
 ### Look at the causal SNPs in group 1 and 2 ###
-vc.pvals[s1]
-vc.pvals[s2]
+normal.pvals[s1]; normal.pvals[s2]
+davies.pvals[s1]; davies.pvals[s2]
+hybrid.pvals[s1]; hybrid.pvals[s2]
 
 ######################################################################################
 ######################################################################################
@@ -155,8 +169,8 @@ vc.pvals[s2]
 
 #NOTE: Now we may take only the significant SNPs according to their marginal epistatic effects and run a simple exhaustive search between them
 
-thresh = 0.05/length(vc.pvals) #Set a significance threshold
-v = vc.pvals[vc.pvals<=thresh] #Call only marginally significant SNPs
+thresh = 0.05/length(hybrid.pvals) #Set a significance threshold
+v = hybrid.pvals[hybrid.pvals<=thresh] #Call only marginally significant SNPs
 pwise = c()
 for(k in 1:length(v)){
   fit = c(); m = 1:length(v)
