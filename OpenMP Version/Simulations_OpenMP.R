@@ -19,7 +19,7 @@ source("QQplot.R")
 #NOTE: This code assumes that the basic C++ functions are set up on the computer in use. If not, the MAPIT functions and Rcpp packages will not work properly. Mac users please refer to the homebrew applications and install the gcc commands listed in the README.md file before running the rest of the code [Warning: This step may take about an hour...].
 
 ### Load in the C++ MAPIT wrapper functions ###
-source("MAPIT.R"); sourceCpp("MAPIT.cpp")
+source("MAPIT_OpenMP.R"); sourceCpp("MAPIT_OpenMP.cpp")
 
 ######################################################################################
 ######################################################################################
