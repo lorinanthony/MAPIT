@@ -99,67 +99,78 @@ SNPs = colnames(X)[c(s1,s2)]
 ######################################################################################
 ######################################################################################
 
-### Running MAPIT using the Normal Method ###
+### Running MAPIT using the Hybrid Method ###
 
 #IMPORTANT: MAPIT takes the X matrix as pxn --- NOT nxp
 
+### Set the number of cores ###
+cores = detectCores()
+
+### Run MAPIT ###
 ptm <- proc.time() #Start clock
-mapit.normal = MAPIT(t(X),y)
+mapit = MAPIT(t(X),y,cores=cores)
 proc.time() - ptm #Stop clock
 
-normal.pvals = mapit.normal$pvalues
-names(normal.pvals) = colnames(X)
-
-######################################################################################
-######################################################################################
-######################################################################################
-
-### Running MAPIT using only the Davies Method for every SNP ###
-ptm <- proc.time() #Start clock
-vc.mod = MAPIT_Davies(t(X),y)
-proc.time() - ptm #Stop clock
-
-### Davies Exact Method ###
-vc.ts = vc.mod$Est
-names(vc.ts) = colnames(X)
-
-davies.pvals = c()
-for(i in 1:length(vc.ts)){
-  lambda = sort(vc.mod$Eigenvalues[,i],decreasing = T)
-  
-  Davies_Method = davies(vc.ts[i], lambda = lambda, acc=1e-8)
-  davies.pvals[i] = 2*min(Davies_Method$Qq, 1-Davies_Method$Qq)
-  names(davies.pvals)[i] = names(vc.ts[i])
-}
-
-######################################################################################
-######################################################################################
-######################################################################################
-
-### Running MAPIT using the Hybrid Approach from the paper where we recalibrate the normal p-values that fall below 0.05 ###
-thresh = 0.05
-
-### Rerun MAPIT using the Davies Method to Recalibrate the p-values for SNPs <= 0.05 ###
-ptm <- proc.time() #Start clock
-mapit.hybrid = MAPIT(t(X),y,threshold=thresh)
-proc.time() - ptm #Stop clock
-
-hybrid.pvals = mapit.hybrid$pvalues
+hybrid.pvals = mapit$pvalues
 names(hybrid.pvals) = colnames(X)
 
 ######################################################################################
 ######################################################################################
 ######################################################################################
 
+### Running MAPIT using the Normal Z-test ###
+
+### Set the number of cores ###
+cores = detectCores()
+
+### Run MAPIT without specifiying test (should get a warning) ###
+ptm <- proc.time() #Start clock
+mapit = MAPIT(t(X),y,hybrid=FALSE,cores=cores)
+proc.time() - ptm #Stop clock
+
+normal.pvals1 = mapit$pvalues
+names(normal.pvals1) = colnames(X)
+
+### Run MAPIT while specifiying test ###
+ptm <- proc.time() #Start clock
+mapit = MAPIT(t(X),y,hybrid=FALSE,test = "normal",cores=cores)
+proc.time() - ptm #Stop clock
+
+normal.pvals2 = mapit$pvalues
+names(normal.pvals2) = colnames(X)
+
+######################################################################################
+######################################################################################
+######################################################################################
+
+### Running MAPIT using Davies Method ###
+
+### Set the number of cores ###
+cores = detectCores()
+
+### Run MAPIT ###
+ptm <- proc.time() #Start clock
+mapit = MAPIT(t(X),y,hybrid=FALSE,test="davies",cores=cores)
+proc.time() - ptm #Stop clock
+
+davies.pvals = mapit$pvalues
+names(davies.pvals) = colnames(X)
+
+######################################################################################
+######################################################################################
+######################################################################################
+
 ### Plot observed the p-values on a QQ-plot ###
-ggd.qqplot(normal.pvals)
-ggd.qqplot(davies.pvals)
 ggd.qqplot(hybrid.pvals)
+ggd.qqplot(normal.pvals1)
+ggd.qqplot(normal.pvals2)
+ggd.qqplot(davies.pvals)
 
 ### Look at the causal SNPs in group 1 and 2 ###
-normal.pvals[s1]; normal.pvals[s2]
-davies.pvals[s1]; davies.pvals[s2]
 hybrid.pvals[s1]; hybrid.pvals[s2]
+normal.pvals1[s1]; normal.pvals1[s2]
+normal.pvals2[s1]; normal.pvals2[s2]
+davies.pvals[s1]; davies.pvals[s2]
 
 ######################################################################################
 ######################################################################################
