@@ -48,7 +48,7 @@ Note that there are two available versions of MAPIT, one of which takes advantag
 For the simulation tutorial provided here, we generate genotypes for 3,000 samples typed at 10,000 unrelated variants. We show in our example R code how to implement MAPIT (both the standard and parallelized versions) to perform a marginal epistasis association mapping test in order to find interacting causal variants of interest.
 
 ### Relevant Citations
-L. Crawford, P. Zeng, S. Mukherjee, X. Zhou (2017). Detecting epistasis with the marginal epistasis test in genetic mapping studies of quantitative traits. PLoS Genet. **13**(7): e1006869.
+L. Crawford, P. Zeng, S. Mukherjee, X. Zhou (2017). Detecting epistasis with the marginal epistasis test in genetic mapping studies of quantitative traits. *PLoS Genet*. **13**(7): e1006869.
 
 ### Questions and Feedback
 For questions or concerns with the MAPIT functions, please contact
