@@ -160,17 +160,42 @@ names(davies.pvals) = colnames(X)
 ######################################################################################
 ######################################################################################
 
+### Running a fast version of MAPIT using an approximate Davies Method ###
+
+### Set the number of cores ###
+cores = detectCores()
+
+### Run MAPIT ###
+ptm <- proc.time() #Start clock
+mapit = MAPIT_Davies_Approx(t(X),y,cores=cores)
+proc.time() - ptm #Stop clock
+
+approx.davies.pvals = c()
+for(i in 1:length(vc.ts)){
+  lambda = sort(mapit$Eigenvalues[,i],decreasing = T)
+  
+  Davies_Method = davies(mapit$Est[i], lambda = lambda, acc=1e-8)
+  approx.davies.pvals[i] = 2*min(Davies_Method$Qq, 1-Davies_Method$Qq)
+  names(approx.davies.pvals)[i] = colnames(X)[i]
+}
+
+######################################################################################
+######################################################################################
+######################################################################################
+
 ### Plot observed the p-values on a QQ-plot ###
 ggd.qqplot(hybrid.pvals)
 ggd.qqplot(normal.pvals1)
 ggd.qqplot(normal.pvals2)
 ggd.qqplot(davies.pvals)
+ggd.qqplot(approx.davies.pvals)
 
 ### Look at the causal SNPs in group 1 and 2 ###
 hybrid.pvals[s1]; hybrid.pvals[s2]
 normal.pvals1[s1]; normal.pvals1[s2]
 normal.pvals2[s1]; normal.pvals2[s2]
 davies.pvals[s1]; davies.pvals[s2]
+approx.davies.pvals[s1]; approx.davies.pvals[s2]
 
 ######################################################################################
 ######################################################################################

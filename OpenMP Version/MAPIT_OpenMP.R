@@ -23,7 +23,7 @@
 #'hybrid' is a parameter detailing if the function should run the hybrid hypothesis testing procedure between the normal Z-test and the Davies method. Default is TRUE.
 #'threshold' is a parameter detailing the value at which to recalibrate the Z-test p-values. If nothing is defined by the user, the default value will be 0.05 as recommended by the Crawford et al. (2017). 
 #'test' is a parameter defining what hypothesis test should be implemented. Takes on values 'normal' or 'davies'. This parameter only matters when hybrid = FALSE. If test is not defined when hybrid = FALSE, the function will automatically use test = 'normal'.
-#'cores' is parameter detailing the number of cores to parallelize over. It is important to note that this value only matters when the user has implemented OPENMP on their operating system. If OPENMP is not installed, then please leave cores = 1 and use the standard version of this code and software.
+#'cores' is a parameter detailing the number of cores to parallelize over. It is important to note that this value only matters when the user has implemented OPENMP on their operating system. If OPENMP is not installed, then please leave cores = 1 and use the standard version of this code and software.
 
 ######################################################################################
 ######################################################################################
@@ -181,8 +181,6 @@ MAPIT = function(X, y, W = NULL,C = NULL,hybrid = TRUE,threshold = 0.05,test = N
       pvals = davies.pvals; pves = vc.mod$PVE
     }
   }
-  
-  
   return(list("pvalues"=pvals,"pves"=pves))
 }
 
