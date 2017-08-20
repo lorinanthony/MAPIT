@@ -1,7 +1,7 @@
 # The MArginal ePIstasis Test (MAPIT)
 
 ### Introduction
-Epistasis, commonly defined as the interaction between multiple genes, is an important genetic component underlying phenotypic variation. Many statistical methods have been developed to model and identify epistatic interactions between genetic variants. However, because of the large combinatorial search space of interactions, most epistasis mapping methods face enormous computational challenges and often suffer from low statistical power. In [Crawford, Zeng, Mukherjee, and Zhou (2017)](http://biorxiv.org/content/early/2017/03/06/066985), we present a novel, alternative strategy for mapping epistasis: the MArginal ePIstasis Test (MAPIT). Our method examines one variant at a time, and estimates and tests its "marginal epistatic effects" --- the combined pairwise interaction effects between a given variant and all other variants. By avoiding explicitly searching for interactions, our method avoids the large combinatorial search space and improves power. Our method is novel and relies on a recently developed variance component estimation method for efficient and robust parameter inference and p-value computation.
+Epistasis, commonly defined as the interaction between multiple genes, is an important genetic component underlying phenotypic variation. Many statistical methods have been developed to model and identify epistatic interactions between genetic variants. However, because of the large combinatorial search space of interactions, most epistasis mapping methods face enormous computational challenges and often suffer from low statistical power. In [Crawford, Zeng, Mukherjee, and Zhou (2017)](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1006869), we present a novel, alternative strategy for mapping epistasis: the MArginal ePIstasis Test (MAPIT). Our method examines one variant at a time, and estimates and tests its "marginal epistatic effects" --- the combined pairwise interaction effects between a given variant and all other variants. By avoiding explicitly searching for interactions, our method avoids the large combinatorial search space and improves power. Our method is novel and relies on a recently developed variance component estimation method for efficient and robust parameter inference and p-value computation.
 
 MAPIT is implemented as a set of R and C++ routines, which can be carried out within an R environment.
 
@@ -46,6 +46,9 @@ Note that there are two available versions of MAPIT, one of which takes advantag
 
 ### Tutorial for Running MAPIT
 For the simulation tutorial provided here, we generate genotypes for 3,000 samples typed at 10,000 unrelated variants. We show in our example R code how to implement MAPIT (both the standard and parallelized versions) to perform a marginal epistasis association mapping test in order to find interacting causal variants of interest.
+
+### Relevant Citations
+L. Crawford, P. Zeng, S. Mukherjee, X. Zhou (2017). Detecting epistasis with the marginal epistasis test in genetic mapping studies of quantitative traits. PLoS Genet. **13**(7): e1006869.
 
 ### Questions and Feedback
 For questions or concerns with the MAPIT functions, please contact
