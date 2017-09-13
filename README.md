@@ -52,7 +52,7 @@ L. Crawford, P. Zeng, S. Mukherjee, X. Zhou (2017). Detecting epistasis with the
 
 ### Questions and Feedback
 For questions or concerns with the MAPIT functions, please contact
-[Lorin Crawford](mailto:lac55@stat.duke.edu) or 
+[Lorin Crawford](mailto:lorin_crawford@brown.edu) or 
 [Xiang Zhou](mailto:xzhousph@umich.edu).
 
 We appreciate any feedback you may have with our repository and instructions.
