@@ -1,4 +1,4 @@
-### Illustrating the MArginal ePIstasis Test (MAPIT) with Simulations ###
+### Illustrating the Liability Threshold MArginal ePIstasis Test (LT-MAPIT) with Simulations ###
 
 ### Clear Console ###
 cat("\014")

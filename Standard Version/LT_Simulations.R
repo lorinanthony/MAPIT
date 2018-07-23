@@ -1,4 +1,4 @@
-### Illustrating the MArginal ePIstasis Test (MAPIT) with Simulations ###
+### Illustrating the Liability Threshold MArginal ePIstasis Test (LT-MAPIT) with Simulations ###
 
 ### Clear Console ###
 cat("\014")
@@ -12,6 +12,7 @@ library(Rcpp)
 library(RcppArmadillo)
 library(RcppParallel)
 library(CompQuadForm)
+library(truncnorm)
 
 ### Load in functions to make QQ-plot plots ###
 source("QQplot.R")
