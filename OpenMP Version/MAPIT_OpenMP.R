@@ -29,15 +29,36 @@
 ######################################################################################
 ######################################################################################
 
-MAPIT = function(X, y, W = NULL,C = NULL,hybrid = TRUE,threshold = 0.05,test = NULL,cores = 1){
+MAPIT = function(X, y, W = NULL,C = NULL,hybrid = TRUE,threshold = 0.05,test = NULL,k = NULL,cores = 1){
   ### Install the necessary libraries ###
   usePackage("doParallel")
   usePackage("Rcpp")
   usePackage("RcppArmadillo")
   usePackage("CompQuadForm")
+  usePackage("truncnorm")
   
   if(cores > 1){
     if(cores>detectCores()){warning("The number of cores you're setting is larger than detected cores!");cores = detectCores()}
+  }
+  
+  ### Check to See if we should run LT-MAPIT ###
+  if(sum(y%in%c(0,1))==length(y)){
+    if(k = NULL){warning("The liability threshold model is going to be used but no disease prevelance is defined! Using the default 0.5.");k = 0.5}
+    ### Save the labels ###
+    cc = y
+  
+    ### Find the Number of Cases and Controls ###
+    n.cases = sum(cc==1)
+    n.controls = sum(cc==0)
+    
+    ### Set the Threshold ###
+    thresh=qnorm(1-k,mean=0,sd=1)
+    
+    ### Bernoulli Distributed Case and Control Data ###
+    Pheno=rep(NA,length(cc));
+    Pheno[cc==0] = rtruncnorm(n.controls,b=thresh)
+    Pheno[cc==1] = rtruncnorm(n.cases,a=thresh)
+    y = Pheno
   }
   
   ### Run the analysis using the hybrid Test ###
