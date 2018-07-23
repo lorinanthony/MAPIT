@@ -138,7 +138,7 @@ proc.time() - ptm #Stop clock
 davies.pvals = mapit$pvalues
 names(davies.pvals) = colnames(X)
 
-### NOTE: The first set of p-values will be deflated (as mentioned in the manuscript). To fix this issues we next run the test statistic readjustment procedure ###
+### NOTE: The first set of p-values will be deflated (as mentioned in Crawford and Zhou (2018)). To fix this issues we next run the test statistic readjustment procedure ###
 pvals = davies.pvals[davies.pvals>=0]; summary(pvals)
 q = qchisq(pvals,df=1,lower.tail = FALSE); summary(q)
 gs = median(q); m = 0.4549; summary((q/gs)*m)
