@@ -23,17 +23,39 @@
 #'hybrid' is a parameter detailing if the function should run the hybrid hypothesis testing procedure between the normal Z-test and the Davies method. Default is TRUE.
 #'threshold' is a parameter detailing the value at which to recalibrate the Z-test p-values. If nothing is defined by the user, the default value will be 0.05 as recommended by the Crawford et al. (2017). 
 #'test' is a parameter defining what hypothesis test should be implemented. Takes on values 'normal' or 'davies'. This parameter only matters when hybrid = FALSE. If test is not defined when hybrid = FALSE, the function will automatically use test = 'normal'.
+#'k' is a parameter specifying the known prevelance of a disease or trait in the population as in Crawford and Zhou (2018). This parameter is only used if y is a binary class of labels (0,1). If this parameter is not set then the default k = 0.5 will used.
 
 ######################################################################################
 ######################################################################################
 ######################################################################################
 
-MAPIT = function(X, y, W = NULL,C = NULL,hybrid = TRUE,threshold = 0.05,test = NULL){
+MAPIT = function(X, y, W = NULL,C = NULL,hybrid = TRUE,threshold = 0.05,test = NULL,k = NULL){
   ### Install the necessary libraries ###
   usePackage("doParallel")
   usePackage("Rcpp")
   usePackage("RcppArmadillo")
   usePackage("CompQuadForm")
+  usePackage("truncnorm")
+  
+  ### Check to See if we should run LT-MAPIT ###
+  if(sum(y%in%c(0,1))==length(y)){
+    if(k = NULL){warning("The liability threshold model is going to be used but no disease prevelance is defined! Using the default 0.5.");k = 0.5}
+    ### Save the labels ###
+    cc = y
+    
+    ### Find the Number of Cases and Controls ###
+    n.cases = sum(cc==1)
+    n.controls = sum(cc==0)
+    
+    ### Set the Threshold ###
+    thresh=qnorm(1-k,mean=0,sd=1)
+    
+    ### Bernoulli Distributed Case and Control Data ###
+    Pheno=rep(NA,length(cc));
+    Pheno[cc==0] = rtruncnorm(n.controls,b=thresh)
+    Pheno[cc==1] = rtruncnorm(n.cases,a=thresh)
+    y = Pheno
+  }
   
   ### Run the analysis using the hybrid Test ###
   if(hybrid==TRUE){

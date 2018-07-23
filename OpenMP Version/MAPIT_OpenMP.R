@@ -1,6 +1,6 @@
 ###***Parallelized Version of the MArginal ePIstasis Test (MAPIT)***###
 
-#This function will run a version of the MArginal ePIstasis Test (MAPIT) under the following model variations:
+#This function will run a version of the MArginal ePIstasis Test (MAPIT) under the following model variations for quantitative or binary traits (which we analyze using a liability threshold model):
 
 #(1) Standard Model ---> y = m+g+e where m ~ MVN(0,omega^2K), g ~ MVN(0,sigma^2G), e ~ MVN(0,tau^2M). Recall from Crawford et al. (2017) that m is the combined additive effects from all other variants, and effectively rep- resents the additive effect of the kth variant under the polygenic background of all other variants; K = X_{−k}^tX_{−k}/(p − 1) is the genetic relatedness matrix computed using genotypes from all variants other than the kth; g is the summation of all pairwise interaction effects between the kth variant and all other variants; G = DKD represents a relatedness matrix computed based on pairwise interaction terms between the kth variant and all other variants. Here, we also denote D = diag(x_k) to be an n × n diagonal matrix with the genotype vector x_k as its diagonal elements. It is important to note that both K and G change with every new marker k that is considered. Lastly; M is a variant specific projection matrix onto both the null space of the intercept and the corresponding genotypic vector x_k.
 
@@ -17,12 +17,13 @@
 
 ### Review of the function parameters ###
 #'X' is the pxn genotype matrix where p is the number of variants and n is the number of samples. Must be a matrix and not a data.frame.
-#'y' is the nx1 vector of quantitative or continuous traits.
+#'y' is the nx1 vector of quantitative (e.g. continuous) or binary traits.
 #'W' is the matrix qxn matrix of covariates. Must be a matrix and not a data.frame.
 #'C' is an nxn covariance matrix detailing environmental effects and population structure effects.
 #'hybrid' is a parameter detailing if the function should run the hybrid hypothesis testing procedure between the normal Z-test and the Davies method. Default is TRUE.
 #'threshold' is a parameter detailing the value at which to recalibrate the Z-test p-values. If nothing is defined by the user, the default value will be 0.05 as recommended by the Crawford et al. (2017). 
 #'test' is a parameter defining what hypothesis test should be implemented. Takes on values 'normal' or 'davies'. This parameter only matters when hybrid = FALSE. If test is not defined when hybrid = FALSE, the function will automatically use test = 'normal'.
+#'#'k' is a parameter specifying the known prevelance of a disease or trait in the population as in Crawford and Zhou (2018). This parameter is only used if y is a binary class of labels (0,1). If this parameter is not set then the default k = 0.5 will used.
 #'cores' is a parameter detailing the number of cores to parallelize over. It is important to note that this value only matters when the user has implemented OPENMP on their operating system. If OPENMP is not installed, then please leave cores = 1 and use the standard version of this code and software.
 
 ######################################################################################
