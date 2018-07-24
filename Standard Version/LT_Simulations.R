@@ -96,13 +96,8 @@ z=z_marginal+z_epi+z_err
 thresh=qnorm(1-k,mean=0,sd=1)
 
 ### Find the Number of Cases and Controls ###
-n.cases = sum(z>thresh); n.cases/length(z)
-n.controls = sum(z<=thresh); n.controls/length(z)
-
-#Bernoulli Distributed Case and Control Data
-Pheno=rep(NA,ind); 
-Pheno[z<=thresh] = rtruncnorm(n.controls,b=thresh) 
-Pheno[z>thresh] = rtruncnorm(n.cases,a=thresh)
+Pheno=rep(0,ind)
+Pheno[z>thresh] = 1
 
 ### Subsample a particular number of cases and controls ###
 cases = sample(which(z>thresh),samp/2,replace = FALSE)
@@ -132,7 +127,7 @@ cores = detectCores()
 
 ### Run LT-MAPIT ###
 ptm <- proc.time() #Start clock
-mapit = MAPIT(t(X),y,hybrid=FALSE,test="davies",cores=cores)
+mapit = MAPIT(t(X),y,hybrid=FALSE,test="davies",k=k,cores=cores)
 proc.time() - ptm #Stop clock
 
 davies.pvals = mapit$pvalues

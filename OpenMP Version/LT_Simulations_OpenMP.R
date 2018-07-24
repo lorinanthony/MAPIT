@@ -38,7 +38,7 @@ source("MAPIT_OpenMP.R"); sourceCpp("MAPIT_OpenMP.cpp")
 # (5) k = assumed disease prevelance in the population
 # (6) samp = # of samples to analyze
 
-ind = 1e6; nsnp = 1e4; pve=0.6; rho=0.5; k = 0.001; samp = 500
+ind = 1e6; nsnp = 1e4; pve=0.6; rho=0.5; k = 0.01; samp = 500
 
 ### Simulate the genotypes such that all variants have minor allele frequency (MAF) > 0.05 ###
 # NOTE: As in the paper, we center and scale each genotypic vector such that every SNP has mean 0 and standard deviation 1.
@@ -96,13 +96,8 @@ z=z_marginal+z_epi+z_err
 thresh=qnorm(1-k,mean=0,sd=1)
   
 ### Find the Number of Cases and Controls ###
-n.cases = sum(z>thresh); n.cases/length(z)
-n.controls = sum(z<=thresh); n.controls/length(z)
-  
-#Bernoulli Distributed Case and Control Data
-Pheno=rep(NA,ind); 
-Pheno[z<=thresh] = rtruncnorm(n.controls,b=thresh) 
-Pheno[z>thresh] = rtruncnorm(n.cases,a=thresh)
+Pheno=rep(0,ind)
+Pheno[z>thresh] = 1
 
 ### Subsample a particular number of cases and controls ###
 cases = sample(which(z>thresh),samp/2,replace = FALSE)
@@ -132,7 +127,7 @@ cores = detectCores()
 
 ### Run LT-MAPIT ###
 ptm <- proc.time() #Start clock
-mapit = MAPIT(t(X),y,hybrid=FALSE,test="davies",cores=cores)
+mapit = MAPIT(t(X),y,hybrid=FALSE,test="davies",k=k,cores=cores)
 proc.time() - ptm #Stop clock
 
 davies.pvals = mapit$pvalues

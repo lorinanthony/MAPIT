@@ -39,7 +39,7 @@ MAPIT = function(X, y, W = NULL,C = NULL,hybrid = TRUE,threshold = 0.05,test = N
   
   ### Check to See if we should run LT-MAPIT ###
   if(sum(y%in%c(0,1))==length(y)){
-    if(k = NULL){warning("The liability threshold model is going to be used but no disease prevelance is defined! Using the default 0.5.");k = 0.5}
+    if(is.null(k)){warning("The liability threshold model is going to be used but no disease prevelance is defined! Using the default 0.5.");k = 0.5}
     ### Save the labels ###
     cc = y
     
