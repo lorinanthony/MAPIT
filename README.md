@@ -51,7 +51,7 @@ For the simulation tutorial provided here, we generate simulated genotypes for 1
 ### Relevant Citations
 L. Crawford, P. Zeng, S. Mukherjee, and X. Zhou (2017). Detecting epistasis with the marginal epistasis test in genetic mapping studies of quantitative traits. *PLoS Genet*. **13**(7): e1006869.
 
-L. Crawford and Z. Zhou (2018). Genome-wide marginal epistatic association mapping in case-control studies. *bioRxiv*. 374983.
+L. Crawford and X. Zhou (2018). Genome-wide marginal epistatic association mapping in case-control studies. *bioRxiv*. 374983.
 
 ### Questions and Feedback
 For questions or concerns with the MAPIT functions, please contact
