@@ -69,13 +69,13 @@ dim(W)
 ### Simulate marginal (additive) effects ###
 Xmarginal=cbind(Xcausal1,Xcausal2,Xcausal3)
 beta=rnorm(dim(Xmarginal)[2])
-y_marginal=Xmarginal%*%beta
+y_marginal=c(Xmarginal%*%beta)
 beta=beta*sqrt(pve*rho/var(y_marginal))
 y_marginal=Xmarginal%*%beta
 
 ### Simulate epistatic effects ###
 alpha=rnorm(dim(W)[2])
-y_epi=W%*%alpha
+y_epi=c(W%*%alpha)
 alpha=alpha*sqrt(pve*(1-rho)/var(y_epi))
 y_epi=W%*%alpha
 

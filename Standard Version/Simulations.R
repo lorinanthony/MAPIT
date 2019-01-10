@@ -69,13 +69,13 @@ dim(W)
 ### Simulate marginal (additive) effects ###
 Xmarginal=cbind(Xcausal1,Xcausal2,Xcausal3)
 beta=rnorm(dim(Xmarginal)[2])
-y_marginal=Xmarginal%*%beta
+y_marginal=c(Xmarginal%*%beta)
 beta=beta*sqrt(pve*rho/var(y_marginal))
 y_marginal=Xmarginal%*%beta
 
 ### Simulate epistatic effects ###
 alpha=rnorm(dim(W)[2])
-y_epi=W%*%alpha
+y_epi=c(W%*%alpha)
 alpha=alpha*sqrt(pve*(1-rho)/var(y_epi))
 y_epi=W%*%alpha
 
@@ -103,12 +103,9 @@ SNPs = colnames(X)[c(s1,s2)]
 
 #IMPORTANT: MAPIT takes the X matrix as pxn --- NOT nxp
 
-### Set the number of cores ###
-cores = detectCores()
-
 ### Run MAPIT ###
 ptm <- proc.time() #Start clock
-mapit = MAPIT(t(X),y,cores=cores)
+mapit = MAPIT(t(X),y)
 proc.time() - ptm #Stop clock
 
 hybrid.pvals = mapit$pvalues
@@ -120,12 +117,9 @@ names(hybrid.pvals) = colnames(X)
 
 ### Running MAPIT using the Normal Z-test ###
 
-### Set the number of cores ###
-cores = detectCores()
-
 ### Run MAPIT without specifiying test (should get a warning) ###
 ptm <- proc.time() #Start clock
-mapit = MAPIT(t(X),y,hybrid=FALSE,cores=cores)
+mapit = MAPIT(t(X),y,hybrid=FALSE)
 proc.time() - ptm #Stop clock
 
 normal.pvals1 = mapit$pvalues
@@ -145,12 +139,9 @@ names(normal.pvals2) = colnames(X)
 
 ### Running MAPIT using Davies Method ###
 
-### Set the number of cores ###
-cores = detectCores()
-
 ### Run MAPIT ###
 ptm <- proc.time() #Start clock
-mapit = MAPIT(t(X),y,hybrid=FALSE,test="davies",cores=cores)
+mapit = MAPIT(t(X),y,hybrid=FALSE,test="davies")
 proc.time() - ptm #Stop clock
 
 davies.pvals = mapit$pvalues
