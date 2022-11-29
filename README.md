@@ -1,6 +1,6 @@
 # The MArginal ePIstasis Test (MAPIT)
 
-### Important Note
+### Important Note on Repository
 A generalization of this software is now maintained in the [**multivariate MArginal ePIstasis Test (mvMAPIT)** GitHub repository](https://github.com/lcrawlab/mvMAPIT) which generalizes the univariate MAPIT framework to any number of traits. Full documentation of the mvMAPIT R package, including examples and articles, can be found [here](https://lcrawlab.github.io/mvMAPIT/).
 
 ### Introduction
