@@ -1,5 +1,8 @@
 # The MArginal ePIstasis Test (MAPIT)
 
+### Important Note
+A generalization of this software is now maintained in the [**multivariate MArginal ePIstasis Test (mvMAPIT)** GitHub repository](https://github.com/lcrawlab/mvMAPIT) which generalizes the MAPIT framework to any number of traits. Full documentation of the R package, including examples and articles, can be found [here](https://lcrawlab.github.io/mvMAPIT/).
+
 ### Introduction
 Epistasis, commonly defined as the interaction between multiple genes, is an important genetic component underlying phenotypic variation. Many statistical methods have been developed to model and identify epistatic interactions between genetic variants. However, because of the large combinatorial search space of interactions, most epistasis mapping methods face enormous computational challenges and often suffer from low statistical power. In [Crawford et al. (2017)](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1006869) and [Crawford and Zhou (2018)](https://www.biorxiv.org/content/early/2018/07/23/374983), we present a novel, alternative strategy for mapping epistasis: the MArginal ePIstasis Test (MAPIT). Our method examines one variant at a time, and estimates and tests its "marginal epistatic effects" --- the combined pairwise interaction effects between a given variant and all other variants. By avoiding explicitly searching for interactions, our method avoids the large combinatorial search space and improves power. Our method is novel and relies on a recently developed variance component estimation method for efficient and robust parameter inference and p-value computation.
 
